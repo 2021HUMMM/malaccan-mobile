@@ -1,6 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:malaccan_mobile/menu.dart';
 
+// Define custom MaterialColor for teal
+MaterialColor customTeal = MaterialColor(
+  const Color(0xFF00796B).value,
+  <int, Color>{
+    50: const Color(0xFFE0F2F1),
+    100: const Color(0xFFB2DFDB),
+    200: const Color(0xFF80CBC4),
+    300: const Color(0xFF4DB6AC),
+    400: const Color(0xFF26A69A),
+    500: const Color(0xFF00796B), // Primary color (500)
+    600: const Color(0xFF00796B),
+    700: const Color(0xFF00695C),
+    800: const Color(0xFF004D40),
+    900: const Color(0xFF003B2D), // Darkest shade (900)
+  },
+);
+
 void main() {
   runApp(const MyApp());
 }
@@ -12,26 +29,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Malaccan Mobile',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: Colors.deepPurple,
-        ).copyWith(secondary: Colors.deepPurple[400]),
+          primarySwatch: customTeal, // Use the custom teal color
+        ).copyWith(secondary: const Color.fromARGB(255, 204, 204, 204)),
         useMaterial3: true,
       ),
       home: MyHomePage(),
