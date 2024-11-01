@@ -8,8 +8,8 @@ class MyHomePage extends StatelessWidget {
   final String className = 'PBP C'; // Kelas
 
   final List<ItemHomepage> items = [
-    ItemHomepage("Lihat daftar produk", Icons.view_list, Colors.green), // Example color
-    ItemHomepage("Tambah produk", Icons.add, Colors.blue), // Example color
+    ItemHomepage("Lihat Daftar Produk", Icons.view_list, Colors.green), // Example color
+    ItemHomepage("Tambah Produk", Icons.add, Colors.blue), // Example color
     ItemHomepage("Logout", Icons.logout, Colors.red), // Example color
       ];
 
@@ -157,7 +157,7 @@ class ItemCard extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!"))
+              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}"))
             );
         },
         // Container untuk menyimpan Icon dan Text
