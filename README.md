@@ -279,3 +279,153 @@ class ItemCard extends StatelessWidget {
 - [x] Apa fungsi dari setState()? Jelaskan variabel apa saja yang dapat terdampak dengan fungsi tersebut.
 - [x] Jelaskan perbedaan antara const dengan final.
 - [x] Jelaskan bagaimana cara kamu mengimplementasikan checklist-checklist di atas.
+
+# Tugas 8
+[Back to Contents](#contents)
+1.  **Apa kegunaan `const` di Flutter? Jelaskan apa keuntungan ketika menggunakan `const` pada kode Flutter. Kapan sebaiknya kita menggunakan `const`, dan kapan sebaiknya tidak digunakan?**</br>
+
+`const` digunakan untuk membuat objek yang bersifat tetap dan diinisialisasi saat compile-time. Hal ini meningkatkan efisiensi kinerja aplikasi. Objek `const` disimpan sekali di memori, mengurangi rebuild widget yang statis. `const` digunakan pada elemen tetap seperti teks atau padding. Kita menghindari penggunaan `const` pada widget yang berubah agar aplikasi tetap responsif terhadap input user.
+
+2. **Jelaskan dan bandingkan penggunaan Column dan Row pada Flutter. Berikan contoh implementasi dari masing-masing layout widget ini!**</br>
+
+Column menata elemen dalam arah vertikal dari atas ke bawah, sedangkan Row menata elemen secara horizontal dari kiri ke kanan. Kita menggunakan mainAxisAlignment untuk mengatur posisi elemen di sepanjang sumbu utamanya (vertikal pada column dan horizontal pada row) dan CrossAxisAlignment untuk mengatur posisi elemen di sepanjang sumbu silangnya (horizontal pada column dan vertikal pada row). Berikut contoh implementasinya:
+```bash
+child: Column( 
+          crossAxisAlignment: CrossAxisAlignment.center, # mengatur posisi pada sumbu horizontal
+          children: [
+            // Row untuk menampilkan 3 InfoCard secara horizontal.
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly, # mengatur posisi pada sumbu horizontal
+              children: [
+                InfoCard(title: 'NPM', content: npm),
+                InfoCard(title: 'Name', content: name),
+                InfoCard(title: 'Class', content: className),
+              ],
+            ),
+```
+
+3. **Sebutkan apa saja elemen input yang kamu gunakan pada halaman form yang kamu buat pada tugas kali ini. Apakah terdapat elemen input Flutter lain yang tidak kamu gunakan pada tugas ini? Jelaskan!**</br>
+
+Pada halaman form yang saya buat, elemen input yang digunakan adalah:
+
+- `TextFormField`: Digunakan untuk menginput teks, seperti:
+   - Nama produk
+   - Deskripsi produk
+   - Harga produk
+   - Jumlah produk
+- `ElevatedButton`: Digunakan sebagai tombol `Save` untuk menyimpan data yang diisi ke dalam form dan menampilkan pesan konfirmasi jika validasi berhasil.
+
+- `AlertDialog`: Digunakan untuk menampilkan dialog konfirmasi setelah pengguna mengklik tombol `Save`, berisi informasi yang telah dimasukkan, seperti nama, deskripsi, harga, dan jumlah produk.
+
+- `TextButton`: Digunakan dalam `AlertDialog` untuk memberikan opsi menutup dialog setelah pengguna melihat informasi yang ditampilkan.
+
+Selain elemen input yang telah digunakan, ada beberapa elemen input lain yang tidak digunakan pada form ini, yaitu:
+
+- `Checkbox`: Untuk pilihan ya/tidak.
+- `Radio`: Untuk memilih satu opsi dari beberapa pilihan.
+- `DropdownButton`: Untuk menampilkan menu drop-down dan memilih satu opsi.
+- `Slider`: Untuk memilih nilai dalam rentang tertentu.
+- `Switch`: Untuk mengaktifkan atau menonaktifkan pilihan boolean.
+
+4. **Bagaimana cara kamu mengatur tema (theme) dalam aplikasi Flutter agar aplikasi yang dibuat konsisten? Apakah kamu mengimplementasikan tema pada aplikasi yang kamu buat?** </br>
+
+Saya mengatur tema menggunakan `ThemeData` dan mendefinisikan warna kustom dengan MaterialColor. Saya memilih warna teal sebagai warna utama (primary) dengan berbagai level kecerahan, dan mengonfigurasi warna sekunder menggunakan `ColorScheme.fromSwatch`. Dengan begini, tema bisa di set secara konsisten. Berikut kodenya:
+```bash
+import 'package:flutter/material.dart';
+import 'package:malaccan_mobile/screens/menu.dart';
+
+// Define custom MaterialColor for teal
+MaterialColor customTeal = MaterialColor(
+  const Color(0xFF00796B).value,
+  <int, Color>{
+    50: const Color(0xFFE0F2F1),
+    100: const Color(0xFFB2DFDB),
+    200: const Color(0xFF80CBC4),
+    300: const Color(0xFF4DB6AC),
+    400: const Color(0xFF26A69A),
+    500: const Color(0xFF00796B), // Primary color (500)
+    600: const Color(0xFF00796B),
+    700: const Color(0xFF00695C),
+    800: const Color(0xFF004D40),
+    900: const Color(0xFF003B2D), // Darkest shade (900)
+  },
+);
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Malaccan Mobile',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: customTeal, // Use the custom teal color
+        ).copyWith(secondary: const Color.fromARGB(255, 204, 204, 204)),
+        useMaterial3: true,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+```
+
+5. **Bagaimana cara kamu menangani navigasi dalam aplikasi dengan banyak halaman pada Flutter?**</br>
+
+Pada Flutter, navigasi dilakukan menggunakan widget `Navigator`, yang bertugas untuk mengelola stack halaman. berikut beberapa contoh method dari `Navigator` yang saya gunakan pada program:
+- `push()`: menambahkan suatu route ke dalam stack route yang dikelola oleh `Navigator`. Pada program dibawah, `push` menambahkan ProductEntryFormPage ke atas stack.
+```bash
+if (item.name == "Tambah Product") {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ProductEntryFormPage()));
+          }
+```
+- `pushReplacement()` : menghapus route yang sedang ditampilkan kepada pengguna dan menggantinya dengan suatu route. Berikut contohnya:
+```bash
+onTap: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(),
+                  ));
+            },
+```
+- `pop()` : menghapus route yang sedang ditampilkan kepada pengguna (atau dalam kata lain, route yang berada pada paling atas stack) dari stack route yang dikelola oleh `Navigator`. Berikut contoh implementasinya:
+```bash
+TextButton(
+  child: const Text('OK'),
+  onPressed: () {
+    Navigator.pop(context);
+    _formKey.currentState!.reset();
+  },
+),
+```
+
+# Checklist Tugas 8
+[Back to Contents](#contents)
+- [x] Membuat minimal satu halaman baru pada aplikasi, yaitu halaman formulir tambah item baru dengan ketentuan sebagai berikut:
+  - [x] Memakai minimal tiga elemen input, yaitu `name`, `amount`, `description`. Tambahkan elemen input sesuai dengan model pada aplikasi tugas Django yang telah kamu buat.
+  - [x] Memiliki sebuah tombol `Save`.
+  - [x] Setiap elemen input di formulir juga harus divalidasi dengan ketentuan sebagai berikut:
+    - [x] Setiap elemen input tidak boleh kosong.
+    - [x] Setiap elemen input harus berisi data dengan tipe data atribut modelnya.
+- [x] Mengarahkan pengguna ke halaman form tambah item baru ketika menekan tombol `Tambah Item` pada halaman utama.
+- [x] Memunculkan data sesuai isi dari formulir yang diisi dalam sebuah `pop-up` setelah menekan tombol Save pada halaman formulir tambah item baru.
+- [x] Membuat sebuah drawer pada aplikasi dengan ketentuan sebagai berikut:
+  - [x] Drawer minimal memiliki dua buah opsi, yaitu `Halaman Utama` dan `Tambah Item`.
+  - [x] Ketika memiih opsi `Halaman Utama`, maka aplikasi akan mengarahkan pengguna ke halaman utama.
+  -[x]  Ketika memiih opsi `Tambah Item`, maka aplikasi akan mengarahkan pengguna ke halaman form tambah item baru.
+- [x] Menjawab beberapa pertanyaan berikut pada `README.md` pada root folder (silakan modifikasi `README.md` yang telah kamu buat sebelumnya; tambahkan subjudul untuk setiap tugas).
+  - [x] Apa kegunaan `const` di Flutter? Jelaskan apa keuntungan ketika menggunakan `const` pada kode Flutter. Kapan sebaiknya kita menggunakan `const`, dan kapan sebaiknya tidak digunakan?
+  - [x] Jelaskan dan bandingkan penggunaan `Column` dan `Row` pada Flutter. Berikan contoh implementasi dari masing-masing layout widget ini!
+  - [x] Sebutkan apa saja elemen input yang kamu gunakan pada halaman form yang kamu buat pada tugas kali ini. Apakah terdapat elemen input Flutter lain yang tidak kamu gunakan pada tugas ini? Jelaskan!
+  - [x] Bagaimana cara kamu mengatur tema (theme) dalam aplikasi Flutter agar aplikasi yang dibuat konsisten? Apakah kamu mengimplementasikan tema pada aplikasi yang kamu buat?
+  - [x] Bagaimana cara kamu menangani navigasi dalam aplikasi dengan banyak halaman pada Flutter?
+- [x] Melakukan `add`-`commit`-`push` ke GitHub.
