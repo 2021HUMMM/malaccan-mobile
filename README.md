@@ -9,6 +9,8 @@
 # Contents:
 - [Jawaban Tugas 7](#tugas-7)
 - [Checklist Tugas 7](#checklist-tugas-7)
+- [Jawaban Tugas 8](#tugas-8)
+- [Checklist Tugas 8](#checklist-tugas-8)
 
 # Tugas 7
 [Back to Contents](#contents)
