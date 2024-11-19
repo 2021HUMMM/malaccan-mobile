@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:malaccan_mobile/productentry_form.dart';
+import 'package:malaccan_mobile/models/product_entry.dart';
+import 'package:malaccan_mobile/screens/productentry_form.dart';
+import 'package:malaccan_mobile/screens/list_productentry.dart';
 
 class ItemHomepage {
   final String name;
@@ -38,6 +40,11 @@ class ItemCard extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => const ProductEntryFormPage()));
+          } else if (item.name == "Lihat Daftar Produk") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProductEntryPage()),
+            );
           }
         },
         // Container untuk menyimpan Icon dan Text

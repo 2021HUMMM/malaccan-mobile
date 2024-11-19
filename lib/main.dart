@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:malaccan_mobile/screens/menu.dart';
-
+import 'package:malaccan_mobile/screens/login.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 // Define custom MaterialColor for teal
 MaterialColor customTeal = MaterialColor(
   const Color(0xFF00796B).value,
@@ -28,7 +30,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return Provider(
+      create: (_) {
+        CookieRequest request = CookieRequest();
+        return request;
+      },
+      child : MaterialApp(
       title: 'Malaccan Mobile',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch(
@@ -36,7 +43,8 @@ class MyApp extends StatelessWidget {
         ).copyWith(secondary: const Color.fromARGB(255, 204, 204, 204)),
         useMaterial3: true,
       ),
-      home: MyHomePage(),
+      home: const LoginPage()
+    ),
     );
   }
 }

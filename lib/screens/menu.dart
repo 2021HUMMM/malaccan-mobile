@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:malaccan_mobile/widgets/left_drawer.dart';
-import 'package:malaccan_mobile/productentry_form.dart';
+import 'package:malaccan_mobile/screens/productentry_form.dart';
 import 'package:malaccan_mobile/screens/product_card.dart';
 
 
