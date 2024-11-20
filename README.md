@@ -859,6 +859,7 @@ class Fields {
     int stock;
     int price;
     String description;
+    String? image;
 
     Fields({
         required this.user,
@@ -866,6 +867,7 @@ class Fields {
         required this.stock,
         required this.price,
         required this.description,
+        this.image,
     });
 
     factory Fields.fromJson(Map<String, dynamic> json) => Fields(
@@ -874,6 +876,7 @@ class Fields {
         stock: json["stock"],
         price: json["price"],
         description: json["description"],
+        image: json["image"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -882,8 +885,10 @@ class Fields {
         "stock": stock,
         "price": price,
         "description": description,
+        "image": image,
     };
 }
+
 
 ```
 
@@ -893,6 +898,7 @@ class Fields {
 import 'package:flutter/material.dart';
 import 'package:malaccan_mobile/models/product_entry.dart';
 import 'package:malaccan_mobile/widgets/left_drawer.dart';
+import 'package:malaccan_mobile/screens/product_detail.dart'; // Import halaman detail
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -905,13 +911,8 @@ class ProductEntryPage extends StatefulWidget {
 
 class _ProductEntryPageState extends State<ProductEntryPage> {
   Future<List<ProductEntry>> fetchMood(CookieRequest request) async {
-    // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
     final response = await request.get('http://127.0.0.1:8000/json/');
-    
-    // Melakukan decode response menjadi bentuk json
     var data = response;
-    
-    // Melakukan konversi data json menjadi object ProductEntry
     List<ProductEntry> listMood = [];
     for (var d in data) {
       if (d != null) {
@@ -936,40 +937,48 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
             return const Center(child: CircularProgressIndicator());
           } else {
             if (!snapshot.hasData) {
-              return const Column(
-                children: [
-                  Text(
-                    'Belum ada data product pada malaccan mobile.',
-                    style: TextStyle(fontSize: 20, color: Color(0xff59A5D8)),
-                  ),
-                  SizedBox(height: 8),
-                ],
+              return const Center(
+                child: Text(
+                  'Belum ada data product pada malaccan mobile.',
+                  style: TextStyle(fontSize: 20),
+                ),
               );
             } else {
               return ListView.builder(
                 itemCount: snapshot.data!.length,
-                itemBuilder: (_, index) => Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${snapshot.data![index].fields.name}",
-                        style: const TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
+                itemBuilder: (_, index) => InkWell(  // Wrap with InkWell for tap effect
+                  onTap: () {
+                    // Navigate to detail page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductDetailPage(
+                          product: snapshot.data![index].fields,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Text("${snapshot.data![index].fields.stock}"),
-                      const SizedBox(height: 10),
-                      Text("${snapshot.data![index].fields.price}"),
-                      const SizedBox(height: 10),
-                      Text("${snapshot.data![index].fields.description}")
-                    ],
+                    );
+                  },
+                  child: Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${snapshot.data![index].fields.name}",
+                            style: const TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text("Stock: ${snapshot.data![index].fields.stock}"),
+                          Text("Price: Rp${snapshot.data![index].fields.price}"),
+                          Text("${snapshot.data![index].fields.description}"),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               );
@@ -981,6 +990,107 @@ class _ProductEntryPageState extends State<ProductEntryPage> {
   }
 }
 ```
+- Membuat halaman detail untuk setiap item yang terdapat pada halaman daftar Item.
+  - Halaman ini dapat diakses dengan menekan salah satu item pada halaman daftar Item.
+  - Tampilkan seluruh atribut pada model item kamu pada halaman ini.
+  - Tambahkan tombol untuk kembali ke halaman daftar item.</br>
+
+saya membuat file baru pada screens dengan nama product_detail.dart yang digunakan untuk mendisplay detail dari suatu produk. kemudian saya hubungkan dengan list_productentry.dart (file pada point sebelumnya). berikut isi dari product_detail.dart:
+```bash
+import 'package:flutter/material.dart';
+import 'package:malaccan_mobile/models/product_entry.dart';
+
+class ProductDetailPage extends StatelessWidget {
+  final Fields product;
+
+  const ProductDetailPage({super.key, required this.product});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Product Detail'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  product.name,
+                  style: const TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                DetailRow(title: "Stock", value: "${product.stock} units"),
+                DetailRow(title: "Price", value: "Rp${product.price}"),
+                const SizedBox(height: 20),
+                const Text(
+                  "Description:",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  product.description,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DetailRow extends StatelessWidget {
+  final String title;
+  final String value;
+
+  const DetailRow({
+    super.key,
+    required this.title,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        children: [
+          Text(
+            "$title: ",
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
 
 # Checklist Tugas 9
 [Back to Contents](#contents)
